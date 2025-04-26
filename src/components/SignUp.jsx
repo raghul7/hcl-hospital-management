@@ -16,7 +16,9 @@ const [pwdError, setPwdError] = useState(false);
 const [password, setPassword] = useState({
     password:"",
     confirmPassword:""
-})
+});
+const [predefinedUserName] = useState(['user','usertest','testUser'])
+const [userNameExistError,setUserNameExistError] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -55,6 +57,12 @@ const [password, setPassword] = useState({
     }
     console.log({password})
   }
+
+  const validateUserName = (event) =>{
+    const name = event.target.value;
+    predefinedUserName.includes(name) ? setUserNameExistError(true) : setUserNameExistError(false);
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -99,9 +107,14 @@ const [password, setPassword] = useState({
             label="User Name"
             name="email"
             autoComplete="email"
+            onChange={(e)=>{validateUserName(e)}}
             error={userNameError}
           />
-          <Alert severity="info">The given username used for login</Alert>
+          {userNameExistError}
+          {userNameExistError ? 
+          <Alert severity="warning">User Name Already Exists</Alert>
+          : <Alert severity="info">The given username used for login</Alert>}
+          
           <TextField
             margin="normal"
             required
